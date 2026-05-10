@@ -353,25 +353,27 @@ export default function BusinessApp({ userId, modo, setModo }) {
           )}
         </div>
 
-        {/* ── FAB ── */}
-        <div
-          style={{
-            position: "fixed",
-            bottom: 74,
-            right: "calc(50% - 210px + 16px)",
-            display: "flex",
-            flexDirection: "column",
-            gap: 10,
-            alignItems: "flex-end",
-          }}
-        >
-          <button
-            onClick={() => setShowForm(true)}
-            style={fabStyle("#10b981", "#059669")}
+        {/* ── FAB (só aparece na aba Lançamentos) ── */}
+        {tab === "lancamentos" && (
+          <div
+            style={{
+              position: "fixed",
+              bottom: 74,
+              right: "calc(50% - 210px + 16px)",
+              display: "flex",
+              flexDirection: "column",
+              gap: 10,
+              alignItems: "flex-end",
+            }}
           >
-            ＋
-          </button>
-        </div>
+            <button
+              onClick={() => setShowForm(true)}
+              style={fabStyle("#10b981", "#059669")}
+            >
+              ＋
+            </button>
+          </div>
+        )}
 
         {/* ── Bottom Nav (2 abas) ── */}
         <div

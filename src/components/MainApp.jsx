@@ -705,34 +705,36 @@ export default function MainApp({ userId, modo, setModo }) {
           )}
         </div>
 
-        {/* ── FAB ── */}
-        <div
-          style={{
-            position: "fixed",
-            bottom: 74,
-            right: "calc(50% - 210px + 16px)",
-            display: "flex",
-            flexDirection: "column",
-            gap: 10,
-            alignItems: "flex-end",
-          }}
-        >
-          {tab === "investimentos" ? (
-            <button
-              onClick={() => setShowInvForm(true)}
-              style={fabStyle("#f59e0b", "#f97316")}
-            >
-              ＋ Investimento
-            </button>
-          ) : (
-            <button
-              onClick={() => setShowForm(true)}
-              style={fabStyle("#6366f1", "#8b5cf6")}
-            >
-              ＋
-            </button>
-          )}
-        </div>
+        {/* ── FAB (só aparece em Lançamentos e Investimentos) ── */}
+        {(tab === "lancamentos" || tab === "investimentos") && (
+          <div
+            style={{
+              position: "fixed",
+              bottom: 74,
+              right: "calc(50% - 210px + 16px)",
+              display: "flex",
+              flexDirection: "column",
+              gap: 10,
+              alignItems: "flex-end",
+            }}
+          >
+            {tab === "investimentos" ? (
+              <button
+                onClick={() => setShowInvForm(true)}
+                style={fabStyle("#f59e0b", "#f97316")}
+              >
+                ＋ Investimento
+              </button>
+            ) : (
+              <button
+                onClick={() => setShowForm(true)}
+                style={fabStyle("#6366f1", "#8b5cf6")}
+              >
+                ＋
+              </button>
+            )}
+          </div>
+        )}
 
         {/* ── Bottom Nav ── */}
         <div
