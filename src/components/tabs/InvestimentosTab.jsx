@@ -155,6 +155,23 @@ export default function InvestimentosTab({
                 {i.instituicao ? ` • ${i.instituicao}` : ""} •{" "}
                 {new Date(i.data + "T00:00:00").toLocaleDateString("pt-BR")}
               </div>
+              {i.desconta_saldo === false && (
+                <span
+                  style={{
+                    display: "inline-block",
+                    marginTop: 4,
+                    fontSize: 9,
+                    background: "#1e40af33",
+                    color: "#93c5fd",
+                    border: "1px solid #1e40af",
+                    borderRadius: 4,
+                    padding: "1px 5px",
+                    fontWeight: 700,
+                  }}
+                >
+                  ℹ️ Não abate saldo
+                </span>
+              )}
             </div>
             <div style={{ textAlign: "right" }}>
               <div style={{ fontSize: 15, fontWeight: 800, color: "#fcd34d" }}>

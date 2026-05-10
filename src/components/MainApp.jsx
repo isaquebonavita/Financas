@@ -18,6 +18,7 @@ import { arrowBtn, kpiCard, fabStyle } from "../styles";
 
 import LoadingOverlay from "./LoadingOverlay";
 import Toast from "./Toast";
+import ModeToggle from "./ModeToggle";
 
 import DashboardTab from "./tabs/DashboardTab";
 import LancamentosTab from "./tabs/LancamentosTab";
@@ -31,7 +32,7 @@ import ReceitaModal from "../modals/ReceitaModal";
 
 const today = new Date();
 
-export default function MainApp({ userId }) {
+export default function MainApp({ userId, modo, setModo }) {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
 
@@ -77,6 +78,7 @@ export default function MainApp({ userId }) {
     valor: "",
     instituicao: "",
     obs: "",
+    descontaSaldo: true,
   };
   const [invForm, setInvForm] = useState(defaultInvForm);
 
@@ -195,7 +197,17 @@ export default function MainApp({ userId }) {
     [investimentos]
   );
 
-  const saldo = totalReceitas - totalDespesas - totalInvestido;
+  // Apenas os investimentos marcados como "desconta_saldo" entram no cálculo
+  // do saldo disponível. Os demais são registros informativos.
+  const totalInvestidoQueDesconta = useMemo(
+    () =>
+      investimentos
+        .filter((i) => i.desconta_saldo !== false) // default true (compat)
+        .reduce((s, i) => s + parseFloat(i.valor || 0), 0),
+    [investimentos]
+  );
+
+  const saldo = totalReceitas - totalDespesas - totalInvestidoQueDesconta;
 
   const gastosCat = useMemo(() => {
     const g = Object.fromEntries(CATEGORIES.map((c) => [c, 0]));
@@ -263,7 +275,15 @@ export default function MainApp({ userId }) {
         .select();
       if (error) throw error;
 
-      setLancamentos((prev) => [...data, ...prev]);
+      // Só injeta no estado os lançamentos cuja data está no mês visualizado.
+      // Sem isso, criar uma recorrência de 3 parcelas faria os 3 valores
+      // aparecerem somados no mês atual até o usuário recarregar.
+      const mesDb = mes + 1;
+      const inicio = `${ano}-${String(mesDb).padStart(2, "0")}-01`;
+      const fim = lastDayOfMonth(ano, mesDb);
+      const dataDoMes = data.filter((l) => l.data >= inicio && l.data <= fim);
+
+      setLancamentos((prev) => [...dataDoMes, ...prev]);
       setForm(defaultForm);
       setShowForm(false);
       setTab("lancamentos");
@@ -292,12 +312,19 @@ export default function MainApp({ userId }) {
           valor: parseFloat(invForm.valor),
           instituicao: invForm.instituicao || null,
           obs: invForm.obs || null,
+          desconta_saldo: invForm.descontaSaldo !== false,
         })
         .select()
         .single();
       if (error) throw error;
 
-      setInvestimentos((prev) => [data, ...prev]);
+      // Só insere no estado se a data do investimento estiver no mês visualizado
+      const mesDb = mes + 1;
+      const inicio = `${ano}-${String(mesDb).padStart(2, "0")}-01`;
+      const fim = lastDayOfMonth(ano, mesDb);
+      if (data.data >= inicio && data.data <= fim) {
+        setInvestimentos((prev) => [data, ...prev]);
+      }
       setInvForm(defaultInvForm);
       setShowInvForm(false);
       setTab("investimentos");
@@ -426,6 +453,17 @@ export default function MainApp({ userId }) {
             borderBottom: "1px solid #1e293b",
           }}
         >
+          {/* Toggle Pessoal/Negócio */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: 14,
+            }}
+          >
+            <ModeToggle modo={modo} onChange={setModo} />
+          </div>
+
           <div
             style={{
               display: "flex",
