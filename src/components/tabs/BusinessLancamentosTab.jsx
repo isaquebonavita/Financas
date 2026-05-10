@@ -133,7 +133,7 @@ export default function BusinessLancamentosTab({
                       cursor: "pointer",
                     }}
                   >
-                    🗑️ Remover
+                    🗑️ Remover este
                   </button>
                 </div>
               )}

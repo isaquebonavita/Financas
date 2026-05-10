@@ -45,9 +45,9 @@ export const BUSINESS_CATEGORIES = [
 ];
 
 export const BUSINESS_CAT_ICONS = {
-  "Vendas": "🛍️", "Serviços": "🛠️", "Fornecedores": "📦",
-  "Salários": "👥", "Aluguel": "🏢", "Marketing": "📣",
-  "Impostos": "🧾", "Outros": "📌",
+  "Vendas": "🛍️", "Serviços": "🤝🏻", "Fornecedores": "🚚",
+  "Salários": "👥", "Aluguel": "🔑", "Marketing": "📢",
+  "Impostos": "🏛️", "Outros": "📋",
 };
 
 export const BUSINESS_CAT_COLORS = {
